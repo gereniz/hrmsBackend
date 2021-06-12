@@ -6,6 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import hrms.hrmsBackend.business.abstracts.JobPositionService;
+import hrms.hrmsBackend.core.utilities.results.DataResult;
+import hrms.hrmsBackend.core.utilities.results.ErrorResult;
+import hrms.hrmsBackend.core.utilities.results.Result;
+import hrms.hrmsBackend.core.utilities.results.SuccessDataResult;
+import hrms.hrmsBackend.core.utilities.results.SuccessResult;
 import hrms.hrmsBackend.dataAccess.abstracts.JobPositionDao;
 import hrms.hrmsBackend.entities.concretes.JobPosition;
 
@@ -24,9 +29,25 @@ public class JobPositionManager implements JobPositionService{
 
 
 	@Override
-	public List<JobPosition> getAll() {
+	public DataResult<List<JobPosition>>getAll() {
 		
-		return this.jobPositionDao.findAll();
+		return new SuccessDataResult<List<JobPosition>>(this.jobPositionDao.findAll(),"Ürünler listelendi");
+	}
+
+	@Override
+	public Result add(JobPosition jobPosition) {
+		if(!checkTitle(jobPosition.getTitle())) {
+			return new ErrorResult("İş Pozisyonu bulunmaktadır");
+		}
+		this.jobPositionDao.save(jobPosition);
+		return new SuccessResult("İş posizyonu eklendi");
+	}
+	
+	private boolean checkTitle(String title) {
+		if(this.jobPositionDao.findByTitle(title) == null) {
+			return true;
+		}
+		return false;
 	}
 
 }

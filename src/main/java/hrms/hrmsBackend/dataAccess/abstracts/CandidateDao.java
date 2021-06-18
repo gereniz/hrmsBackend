@@ -8,6 +8,6 @@ import hrms.hrmsBackend.entities.concretes.Candidate;
 
 public interface CandidateDao extends JpaRepository<Candidate, Integer>{
 	Candidate findByEmail(String email);
-	Candidate findByNationalIdentity(String nationalId);
+	Candidate findByNationalIdentity(String nationalIdentity);
 
 }
